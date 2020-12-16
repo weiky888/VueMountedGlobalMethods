@@ -1,0 +1,71 @@
+  // Vue根实例prototype 原型上用特定名称去挂载属性、方法 
+  
+ 1.0 插件类抽取具体某方法使用
+ 
+  //如1：组件实例的使用
+    import  { Toast }  from  'mint-ui'
+    Vue.prototype.$toast  = Toast; 
+    this.$toast("弹出提示信息")  
+
+ //如2： 组件实例的使用
+    import  axios  from 'axios'
+    Vue.prototype.$http=  axios ;
+    this.$http({
+          url，
+          methods: "get" || "post"
+          params:{ *** }
+        }
+    ) .then(res  =>{
+         console.log( res)
+    }) 
+
+
+
+2.0 utils 方法集
+
+  //新建 utils 文件夹  对外暴露  utils 方法
+  export  default {
+      // 如字符串包含有“病毒”，更改为“疫情”展示
+      reCorrectStr( str1,key1,key2){
+            if(str1.indexOf(key1) != -1){
+                return   str1.replace(/key1/g,key2)   // 存在关键词替换
+            }else{
+                 return   str1   // 不存在关键词
+             }
+      },
+      
+   // 本地存储
+    setStore( name,content ){  
+            // 存储项目信息
+             let  cloneContent;
+            if(!name){ return; }
+            if(content  &&  typeof content !=='string'){
+                  cloneContent  =    JSON.stringify(content)
+                  window.localStorage.setItem(name , cloneContent )
+              }  
+      },
+      
+   // 本地获取
+   getStore( name ){  
+            if(!name){ return "" }
+            return   window.localStorage.getItem(name)
+      },
+  // 本地移除
+   removeStore(name){
+         if(!name) return ;
+         window.localStorage.removeItem(name)
+   }
+   
+   ......
+}
+
+
+ // 在 main.js 加载  导入 utils   方法
+   import utils from  '@/pages/utils/utils'
+   Vue.prototype.$utils  =  utils   
+
+
+//实例的使用
+this.$utils.setStore(userInfo) 
+this.$utils.getStore(userInfo) 
+this.$utils.removeStore(userInfo) 
