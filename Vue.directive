@@ -77,7 +77,6 @@ main.js 中添加指令，效果是全局性
 })
 
 
-
 // html
  <div class="container">
        <input type="text" value="weiky" v-focus/>
