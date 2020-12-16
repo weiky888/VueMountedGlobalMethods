@@ -1,0 +1,66 @@
+1.0 单独创建: common.js  并暴露出去：
+export  default {
+  install (Vue,options){
+     Vue.prototype.methods1 =(verifyInfo='请输入正确的手机号码')=>{
+         return (rule,value,callback)=>{
+            const reg = /^1[3|4|5|6|7|8][0-9]\d{8}$/;
+            if(!value || reg.test(value)){
+               callback();
+            }else{
+               return callback(new Error(verifyInfo))
+            }
+        }
+     },
+     Vue.prototype.methods2 =(value) =>{
+           if(value && value.length > 8){
+             return  value.slice(0,8)+'......'
+           }else{
+            return value
+           }
+      }
+   }
+}
+
+
+2.0  main.js 的引入
+// 引入公共的全局方法
+import ms from './common/common'
+Vue.use(ms)
+
+
+3.0  方法在具体页面的调用
+html:
+ <el-form class="apply-form"
+               :model="formData"
+               :rules="rules"
+               ref="form">
+        <el-form-item label="手机号" prop="telPhone">
+          <el-input v-model="formData.telPhone"
+                    v-number-only
+                    maxlength="11"
+                    placeholder="请输入手机号" clearable></el-input>
+        </el-form-item>
+      </el-form>
+      <div class="limit_stringfy">
+        {{contTxt}}
+      </div>
+
+js部分：
+    data() {
+            return {
+                stringFyData:"whhewejisuaysgahdjiowqoiiehhf",
+                formData:{
+                    telPhone:""
+                },
+                rules: {
+                    telPhone: [
+                        { validator: this.methods1(), trigger: ["blur"],max:11}
+                    ]
+                }
+            }
+        },
+ computed:{
+            contTxt(){
+                return  this.methods2(this.stringFyData)
+            }
+        }
