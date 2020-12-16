@@ -1,0 +1,61 @@
+// mixin 扩容新的组件，为嵌入的父组件开辟新的空间，来根据跟props的值进行操作。
+
+1.0  新建文件夹mixin  > 新建mixin.js
+      创建 vue 模板中的 js 模块
+      export  default {
+         data(){
+           return {
+             name:"mixin",
+             reSum:0
+           }
+         },
+        create() {
+          console.log('mixin.....', this.name);
+          // this.reSum = this.getResult()
+        },
+        mounted(){
+          this.reSum = this.getResult()
+        },
+        methods: {
+          getResult(){
+             let sum = 0
+             for(let i=1;i<=1000;i++){
+                sum+=i
+             }
+             return sum
+          }
+        },
+        computed:{
+          computedResult(){
+            let sum = 0
+            for(let i=1;i<=999;i++){
+              sum+=i
+            }
+            return sum
+          }
+        }
+      }
+
+
+2.0 具体页面引用和使用：
+    <template>
+        <div class="container">
+          {{name}}<br/>
+          {{reSum }}<br/>
+          {{computedResult}}
+        </div>
+    </template>
+    <script>
+      import Mixin from '@/mixin/mixin' //以 Mixin 名称引入 mixin 文件
+        export default {
+            mixins:[Mixin],
+            data() {
+                return {
+
+                }
+            }
+        }
+    </script>
+    <style lang="less" scoped>
+
+    </style>
