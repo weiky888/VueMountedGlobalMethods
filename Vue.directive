@@ -1,0 +1,115 @@
+Vue.directive 涵盖5个钩子函数
+  // 5 个钩子函数
+  // bind 只调用一次，指令第一次绑定到元素时调用，用钩子函数可以定义一个绑定时执行一次的初始化动作。
+
+  // inserted   被绑定元素插入父节点时调用（存在父节点时___即调用）
+
+  // update   被绑定元素所在的模板更新时调用；
+
+  // componentUpdated   被绑定元素所在模板完成一次更新周期时调用 ~~
+
+  // unbind  只调用一次,元素解绑时候调用
+
+
+  
+ 
+main.js 中添加指令，效果是全局性
+
+  import Vue from 'vue'
+  
+  // 自定义指令 v-my-click
+  Vue.directive('my-click',{
+         bind:function(el,binding,vnode,oldVnode){
+            el.addEventListener('click',function(){
+              console.log(el,binding)
+            })
+         },
+         inserted:function(el,binding,vnode,oldVnode){
+
+         }
+       })
+       
+  // 自定义指令 v-focus
+  Vue.directive("focus",{
+      bind:function(el,binding){
+          console.log(el,binding)
+          console.log('el',binding.name)
+          console.log('el',binding.def.bind.name)
+          console.log('\n')
+      },
+      inserted:function(el,bingding,vnode){
+         console.log(el);
+         console.log(vnode.context._vnode.tag); // 外层包裹的盒子标签
+         let  newTag =document.createElement('h3'),
+              textNode = document.createTextNode('娃哈哈...');
+         newTag.appendChild(textNode)
+         document.getElementById('test').insertBefore(newTag,             document.getElementById('test').childNodes[0])
+         console.log('\n')
+      },
+      update:function(el,binding,vnode,oldVnode){
+         console.log(el.dataset.name);
+         console.log(binding,333);
+         console.log(vnode);
+         console.log(oldVnode);
+         console.log('\n')
+      },
+      componentUpdated:function(el,binding){
+         console.log("componentUpdated",el)
+      },
+      unbind:function(el,binding){
+         console.log(el,binding)
+      }
+    })
+
+ // 自定义指令 v-number-only
+ Vue.directive('numberOnly', {
+    bind: function (el) {
+    el.handler = function () {
+      el.childNodes[1].value = el.childNodes[1].value.replace(/\D+/g, '');
+      //因为是elementui组件里使用的el.value获取不到我们输入的内容。然后我发现他的第一个孩子才是我们输入的手机号码的内容。
+    }
+    el.addEventListener('keyup', el.handler);
+    //这里使用keyup。我开始用的input发现第一次输入拼音字母竟然是可以输入的。改成keyup就都不能输入非数字了
+  },
+    unbind: function (el) {
+    el.removeEventListener('keyup', el.handler);
+  }
+})
+
+
+
+// html
+ <div class="container">
+       <input type="text" value="weiky" v-focus/>
+  </div>
+
+
+// html
+ <div class="container">
+       <div id="test" style="color: red" v-my-click>测试...</div>
+  </div>
+
+
+// html
+<div class="container">
+        <el-form class="apply-form"
+             :model="formData"
+             :rules="rules"
+             ref="form">
+       <el-form-item label="手机号" prop="telPhone">
+        <el-input v-model="formData.telPhone"
+                  v-number-only
+                  maxlength="11"
+                  placeholder="请输入手机号" clearable></el-input>
+      </el-form-item>
+    </el-form>
+    <div class="limit_stringfy">
+        {{contTxt}}
+    </div>
+</div>
+
+
+
+
+
+
