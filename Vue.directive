@@ -66,10 +66,10 @@ main.js 中添加指令，效果是全局性
     bind: function (el) {
     el.handler = function () {
       el.childNodes[1].value = el.childNodes[1].value.replace(/\D+/g, '');
-      //因为是elementui组件里使用的el.value获取不到我们输入的内容。然后我发现他的第一个孩子才是我们输入的手机号码的内容。
+      //elementui组件里使用的el.value获取不到我们输入的内容
     }
     el.addEventListener('keyup', el.handler);
-    //这里使用keyup。我开始用的input发现第一次输入拼音字母竟然是可以输入的。改成keyup就都不能输入非数字了
+    //使用keyup。改成keyup校验非数字的输入
   },
     unbind: function (el) {
     el.removeEventListener('keyup', el.handler);
